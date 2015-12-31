@@ -33,6 +33,10 @@ proguard/
 /target/
 
 #intellij
-
+.idea/
 .idea/*
 *.iml
+gradle/
+*.gradle
+gradle*
+import*
