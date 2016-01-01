@@ -6,10 +6,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,18 +24,19 @@ public class LoginActivity extends Activity implements OnClickListener {
     TextView SignUp;
     EditText username, password;
     ProgressDialog progressDialog;
-    String res = null;
     Context context;
     HttpPostData post;
+    HttpConnection send;
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        SharedPreferences sessionID = getSharedPreferences(Properties.CABSHARE_SHARED_PREFERENCES, MODE_MULTI_PROCESS);
-        String sessId = sessionID.getString(Properties.PROPERTY_SESSION_ID, "");
-        if (!sessId.isEmpty()) {
+
+        SharedPreferences sessionID = getSharedPreferences(Properties.CABSHARE_SHARED_PREFERENCES, MODE_PRIVATE);
+        boolean loggedIn = sessionID.getBoolean(Properties.IS_LOGGED_IN, false);
+        if (loggedIn) {
             Intent i = new Intent("com.example.cabshare.REQUESTER_SHARER");
             startActivity(i);
             finish();
@@ -47,7 +48,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         setContentView(R.layout.login);
         context = getApplicationContext();
         post = new HttpPostData(context);
-        MyGCM gcm = new MyGCM(context);
+        send = new HttpConnection();
         Initialize();
     }
 
@@ -68,10 +69,10 @@ public class LoginActivity extends Activity implements OnClickListener {
             case R.id.bLogIn:
                 //final HttpPostData SendViaPost = new HttpPostData(getApplicationContext());
 
-                final String ImeiNo = getRegistrationId();
+                //final String ImeiNo = getRegistrationId();
                 final String uid = username.getText().toString();
                 final String pwd = password.getText().toString();
-                Toast.makeText(this, ImeiNo + "\n " + uid + "\n " + pwd, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "ImeiNo" + "\n " + uid + "\n " + pwd, Toast.LENGTH_SHORT).show();
                 try {
                     new AsyncTask<Void, Integer, String>() {
                         protected void onPreExecute() {
@@ -82,14 +83,23 @@ public class LoginActivity extends Activity implements OnClickListener {
                         protected String doInBackground(Void... arg0) {
                             // TODO Auto-generated method stub
                             //res = SendViaPost.sendLoginDetails(ImeiNo, uid, pwd);
-                            Bundle data = new Bundle();
-                            data.putString(Properties.Username, uid);
-                            data.putString(Properties.Password, pwd);
-                            data.putString("my_action", "login");
-                            //ToGCM gotoGcm = new ToGCM(context);
+                            /*JSONObject data = new JSONObject();
+                            try {
+                                data.put(Properties.Username, uid);
+                                data.put(Properties.Password, pwd);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }*/
+                            //ToGCM gotoGcm = new ToGCM(context)
                             //res = gotoGcm.send(data);
+                            Uri.Builder builder = new Uri.Builder()
+                                    .appendQueryParameter(Properties.Username, uid)
+                                    .appendQueryParameter(Properties.Password, pwd);
+                            String data = builder.build().getEncodedQuery();
                             Log.d("Login details", uid + " " + pwd);
-                            res = post.sendLoginDetails("123", uid, pwd);
+                            String res = null;
+                            //res = post.sendLoginDetails("123", uid, pwd);
+                            res = send.loginRequest(data);
                             Log.d("Response", res);
                             return res;
                         }
@@ -101,12 +111,19 @@ public class LoginActivity extends Activity implements OnClickListener {
                                 //SharedPreferences responseData = getSharedPreferences(Properties.CABSHARE_SHARED_PREFERENCES,MODE_MULTI_PROCESS);
                                 //String response = responseData.getString(Properties.PROPERTY_SESSION_ID, "Not Present");
                                 //MyGCM mgcm = new MyGCM(getApplicationContext());
-                                Toast.makeText(getApplicationContext(), res, Toast.LENGTH_LONG).show();
+                                SharedPreferences responseData = context.getSharedPreferences(Properties.CABSHARE_SHARED_PREFERENCES, MODE_PRIVATE);
+                                SharedPreferences.Editor editor = responseData.edit();
+                                editor.putBoolean(Properties.IS_LOGGED_IN, true);
+                                editor.putString(Properties.PROPERTY_USER_ID, uid);
+                                editor.commit();
+                                MyGCM gcm = new MyGCM(context);
+                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                                Log.d("Response",msg);
                                 Intent in = new Intent("com.example.cabshare.REQUESTER_SHARER");
                                 startActivity(in);
                                 finish();
                             } else {
-                                Toast.makeText(LoginActivity.this, res, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
                             }
                         }
                     }.execute(null, null, null);
@@ -124,10 +141,9 @@ public class LoginActivity extends Activity implements OnClickListener {
                 break;
         }
     }
-
-    private String getRegistrationId() {
+    /*private String getRegistrationId() {
         // TODO Auto-generated method stub
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         return telephonyManager.getDeviceId();
-    }
+    }*/
 }

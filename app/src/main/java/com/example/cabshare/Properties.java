@@ -11,9 +11,10 @@ public class Properties {
     public static final String CABSHARE_SHARED_PREFERENCES = "cabShare";
     public static final String PROPERTY_REG_ID = "registration_id";
     public static final String PROPERTY_APP_VERSION = "appVersion";
+    public static final String IS_LOGGED_IN = "loggedIn";
     public static final String SENDER_ID = "1054444576671";
     public static final String Username = "username";
-    public static final String Password = "pwd";
+    public static final String Password = "password";
     public static Location location;
     public static LatLng sCoord = null;
     public static LatLng dCoord = null;
