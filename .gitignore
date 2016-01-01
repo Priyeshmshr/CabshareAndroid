@@ -37,6 +37,5 @@ proguard/
 .idea/*
 *.iml
 gradle/
-*.gradle
-gradle*
+.gradle
 import*
