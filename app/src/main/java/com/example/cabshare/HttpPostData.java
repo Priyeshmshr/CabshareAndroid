@@ -23,6 +23,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+/**
+ * Deprecated.
+ */
 public class HttpPostData extends Activity {
 
     String url = "http://cs-creativeinstinct.rhcloud.com/app.handle.php";

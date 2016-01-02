@@ -19,7 +19,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-
+/**
+* Created by Priyesh Mishra.
+*/
 public class Profile extends Activity implements OnClickListener {
 
     ImageView ivProfilePic;

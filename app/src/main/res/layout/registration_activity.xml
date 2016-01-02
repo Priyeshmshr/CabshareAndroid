@@ -27,7 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvHeader"
-        android:layout_alignParentLeft="true"
         android:layout_marginTop="35dp"
         android:ems="10"
         android:hint="Full Name"
@@ -81,7 +80,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/etContact"
         android:layout_marginTop="30dp"
-        android:text="Register"
+        android:enabled="false"
+        android:textColor="#000000"
+        android:textSize="30dp"
+        android:text="Sign Up"
         tools:ignore="HardcodedText" />
 </RelativeLayout>
 </ScrollView>

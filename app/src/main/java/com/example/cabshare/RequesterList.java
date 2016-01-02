@@ -7,6 +7,9 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.os.Bundle;
 
+/**
+ * Created by Priyesh Mishra on 01-01-2016.
+ */
 public class RequesterList extends Activity {
 
     String uid[], slat[], slon[], dlat[], dlon[];

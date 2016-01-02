@@ -2,13 +2,13 @@ package com.example.cabshare;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,12 +17,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class MyRegistrationActivity extends Activity implements OnClickListener {
+/**
+ * Created by Priyesh Mishra.
+ */
+public class MyRegistrationActivity extends Activity implements OnClickListener, TextWatcher {
 
-    Button SignUp;
-    Spinner spinner;
-    ProgressDialog progressDialog = null;
-    EditText username, password, fullName, gender,etContact;
+    private Button signUp;
+    private Spinner spinner;
+    private ProgressDialog progressDialog = null;
+    private EditText username, password, fullName, gender,etContact;
     private final String fnKey = "fullname";
     private final String gndrKey = "gender";
     private final String contact = "contact_no";
@@ -45,13 +48,18 @@ public class MyRegistrationActivity extends Activity implements OnClickListener 
     private void Initialize() {
         // TODO Auto-generated method stub
 
-        SignUp = (Button) findViewById(R.id.bRegister);
+        signUp = (Button) findViewById(R.id.bRegister);
         username = (EditText) findViewById(R.id.etUsername);
         password = (EditText) findViewById(R.id.etPassword);
         fullName = (EditText) findViewById(R.id.etFullName);
         gender = (EditText) findViewById(R.id.etGender);
         etContact = (EditText) findViewById(R.id.etContact);
-        SignUp.setOnClickListener(this);
+        signUp.setOnClickListener(this);
+        username.addTextChangedListener(this);
+        password.addTextChangedListener(this);
+        fullName.addTextChangedListener(this);
+        gender.addTextChangedListener(this);
+        etContact.addTextChangedListener(this);
     }
 
     @Override
@@ -124,7 +132,41 @@ public class MyRegistrationActivity extends Activity implements OnClickListener 
                 break;
         }
     }
+    private boolean validate() {
+        boolean valid = true;
+        if(username.getText().toString().isEmpty()) {
+            //username.setError("This field is required!");
+            valid = false;
+        }
+        if( password.getText().toString().isEmpty()) {
+            //password.setError("This field is required!");
+            valid = false;
+        }
+        if(gender.getText().toString().isEmpty()){
+            //gender.setError("This field is required!");
+            valid = false;
+        }
+        if(fullName.getText().toString().isEmpty()){
+            //fullName.setError("This field is required!");
+            valid = false;
+        }
+        if(etContact.getText().toString().isEmpty()){
+            //etContact.setError("This field is required!");
+            valid = false;
+        }
+        return valid;
+    }
 
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+    @Override
+    public void afterTextChanged(Editable s) {
+        signUp.setEnabled(validate());
+    }
     /*private String getRegistrationId() {
         // TODO Auto-generated method stub
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);

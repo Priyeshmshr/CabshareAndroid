@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,22 +20,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LoginActivity extends Activity implements OnClickListener {
+/**
+ * Created by Priyesh Mishra.
+ */
+public class LoginActivity extends Activity implements OnClickListener, TextWatcher {
 
-    Button LogIn;
-    TextView SignUp;
-    EditText username, password;
-    ProgressDialog progressDialog;
-    Context context;
-    HttpPostData post;
-    HttpConnection send;
+    private Button logIn;
+    private TextView signUp;
+    private EditText username, password;
+    private ProgressDialog progressDialog;
+    private Context context;
+    private HttpPostData post;
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-
         SharedPreferences sessionID = getSharedPreferences(Properties.CABSHARE_SHARED_PREFERENCES, MODE_PRIVATE);
         boolean loggedIn = sessionID.getBoolean(Properties.IS_LOGGED_IN, false);
         if (loggedIn) {
@@ -44,22 +47,22 @@ public class LoginActivity extends Activity implements OnClickListener {
         /*Intent in = new Intent("com.example.cabshare.REQUESTER_SHARER");
 	    startActivity(in);
 	    finish();*/
-
         setContentView(R.layout.login);
         context = getApplicationContext();
         post = new HttpPostData(context);
-        send = new HttpConnection();
         Initialize();
     }
 
     private void Initialize() {
         // TODO Auto-generated method stub
-        LogIn = (Button) findViewById(R.id.bLogIn);
-        SignUp = (TextView) findViewById(R.id.tvSignUp);
+        logIn = (Button) findViewById(R.id.bLogIn);
+        signUp = (TextView) findViewById(R.id.tvSignUp);
         username = (EditText) findViewById(R.id.etLoginUsername);
         password = (EditText) findViewById(R.id.etLoginPassword);
-        LogIn.setOnClickListener(this);
-        SignUp.setOnClickListener(this);
+        logIn.setOnClickListener(this);
+        signUp.setOnClickListener(this);
+        username.addTextChangedListener(this);
+        password.addTextChangedListener(this);
     }
 
     @Override
@@ -67,8 +70,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         // TODO Auto-generated method stub
         switch (v.getId()) {
             case R.id.bLogIn:
-                //final HttpPostData SendViaPost = new HttpPostData(getApplicationContext());
-
+                //final HttpPostData SendViaPost = new HttpPostData(getApplicationContext())
                 //final String ImeiNo = getRegistrationId();
                 final String uid = username.getText().toString();
                 final String pwd = password.getText().toString();
@@ -99,6 +101,7 @@ public class LoginActivity extends Activity implements OnClickListener {
                             Log.d("Login details", uid + " " + pwd);
                             String res = null;
                             //res = post.sendLoginDetails("123", uid, pwd);
+                            HttpConnection send = new HttpConnection();
                             res = send.loginRequest(data);
                             Log.d("Response", res);
                             return res;
@@ -137,9 +140,18 @@ public class LoginActivity extends Activity implements OnClickListener {
                 Intent in = new Intent("com.example.cabshare.MYREGISTRATIONACTIVITY");
                 startActivity(in);
                 finish();
-                //setContentView(R.layout.registration_activity);
                 break;
         }
+    }
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+    @Override
+    public void afterTextChanged(Editable s) {
+        logIn.setEnabled(!username.getText().toString().isEmpty() && !password.getText().toString().isEmpty());
     }
     /*private String getRegistrationId() {
         // TODO Auto-generated method stub

@@ -14,6 +14,8 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 /**
+ * Created by Priyesh Mishra.
+ *
  * This {@code IntentService} does the actual handling of the GCM message.
  * {@code GcmBroadcastReceiver} (a {@code WakefulBroadcastReceiver}) holds a
  * partial wake lock for this service while the service does its work. When the

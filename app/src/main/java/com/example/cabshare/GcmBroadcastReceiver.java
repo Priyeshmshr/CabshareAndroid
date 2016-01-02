@@ -14,6 +14,9 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * Created by Priyesh Mishra.
+ */
 public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 
     public static JSONArray jarray;

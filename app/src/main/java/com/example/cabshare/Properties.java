@@ -4,6 +4,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 import android.location.Location;
 
+/**
+ * Created by Priyesh Mishra.
+ */
 public class Properties {
 
     public static final String PROPERTY_SESSION_ID = "SessionId";

@@ -9,6 +9,9 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+/**
+ * Created by Priyesh Mishra on 01-01-2016.
+ */
 public class ToGCM {
 
     GoogleCloudMessaging gcm;
